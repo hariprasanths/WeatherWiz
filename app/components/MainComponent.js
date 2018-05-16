@@ -9,12 +9,10 @@ import {
     ToastAndroid, Button, TouchableOpacity, Image
 } from 'react-native';
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        paddingTop: 50,
         flexDirection: 'row',
         backgroundColor: '#f3f3f3',
         alignItems: 'center'
@@ -103,32 +101,36 @@ class MainComponent extends Component {
                     .then(res => {
 
                         console.log(res);
-                        this.weatherData = res;
-                        this.weatherImage = API_IMG + this.weatherData.weather[0].icon + '.png';
+                        if(res.cod == 200) {
+                            this.weatherData = res;
+                            this.weatherImage = API_IMG + this.weatherData.weather[0].icon + '.png';
 
-                        let date = new Date(this.weatherData.sys.sunrise*1000);
-                        let hours = date.getHours();
-                        let minutes = "0" + date.getMinutes();
-                        let seconds = "0" + date.getSeconds();
-                        this.weatherDataSunrise = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+                            let date = new Date(this.weatherData.sys.sunrise * 1000);
+                            let hours = date.getHours();
+                            let minutes = "0" + date.getMinutes();
+                            let seconds = "0" + date.getSeconds();
+                            this.weatherDataSunrise = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
 
-                        date = new Date(this.weatherData.sys.sunset*1000);
-                        hours = date.getHours();
-                        minutes = "0" + date.getMinutes();
-                        seconds = "0" + date.getSeconds();
-                        this.weatherDataSunset = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+                            date = new Date(this.weatherData.sys.sunset * 1000);
+                            hours = date.getHours();
+                            minutes = "0" + date.getMinutes();
+                            seconds = "0" + date.getSeconds();
+                            this.weatherDataSunset = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
 
-                        date = new Date(this.weatherData.dt*1000);
+                            date = new Date(this.weatherData.dt * 1000);
 
-                        hours = date.getHours();
-                        minutes = "0" + date.getMinutes();
-                        seconds = "0" + date.getSeconds();
-                        this.weatherDataDate = hours + ':' + minutes.substr(-2) + ' ' + date.toDateString();
+                            hours = date.getHours();
+                            minutes = "0" + date.getMinutes();
+                            seconds = "0" + date.getSeconds();
+                            this.weatherDataDate = hours + ':' + minutes.substr(-2) + ' ' + date.toDateString();
 
-                        this.setState({
-                            weatherLoadingDone: true
-                        })
-                    });
+                            this.setState({
+                                weatherLoadingDone: true
+                            })
+                        }else ToastAndroid.show(res.message, ToastAndroid.SHORT);
+                    }).catch((error) => {
+                        console.log(error.message);
+                });
 
             },
             (error) => {
@@ -165,8 +167,13 @@ class MainComponent extends Component {
         this.requestLocationPermission();
     }
 
-    onPressFab() {
+    static navigationOptions = {
+        title: 'Weather'
+    };
 
+    onPressFab() {
+        const { navigate } = this.props.navigation;
+        navigate('WeatherInfo', { name: 'City' })
     }
 
     render() {

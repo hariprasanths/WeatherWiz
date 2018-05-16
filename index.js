@@ -4,28 +4,23 @@ import {
     Platform,
     StyleSheet,
     Text,
-    View
+    View,
+    YellowBox
 } from 'react-native';
 
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+
 import MainComponent from './app/components/MainComponent';
+import WeatherInfo from "./app/components/WeatherInfo";
 
+import {
+    createStackNavigator,
+} from 'react-navigation';
 
-class App extends Component<Props> {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <MainComponent/>
-                <Text style={styles.title}>
-                    Weather
-                </Text>
-            </View>
-        );
-    }
-}
+const App = createStackNavigator({
+    Home: { screen: MainComponent},
+    WeatherInfo: { screen: WeatherInfo },
+});
 
 const styles = StyleSheet.create({
     container: {
